@@ -1,7 +1,7 @@
 # Python-trading-bot--Alpaca-Gemini-Currents-APIs
 This is a Git repo for an algorithmic trading bot tracking stock futures and executing trades on their respective ETFs, (e.g. QQQ, SPY, SOXX) running locally on Python and pulling data, executing trades and sending notifications via external API services.
 <br><br> The trading strategy is twofold: at market open, an Opening Range Breakout (ORB) strategy is executed, subsequently a liquidity sweep strategy targets larger moves later into the trading session.
-<br><br> Trades are executed via the Alpaca API, where papertrading funds are available (simulated money).
+<br><br> Trades are executed via the Alpaca API. Alpaca is a platform where paper-trading (trading with simulated money) is available.
 
 ## General
 Program requires Python 3.10+
