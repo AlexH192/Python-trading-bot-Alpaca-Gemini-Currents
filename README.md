@@ -1,5 +1,9 @@
 # Python-trading-bot--Alpaca-Gemini-Currents-APIs
+This is a Git repo for an algorithmic trading bot tracking stock futures and executing trades on their respective ETFs, (e.g. QQQ, SPY, SOXX) running locally on Python and pulling data, executing trades and sending notifications via external API services.
+<br><br> The trading strategy is twofold: at market open, an Opening Range Breakout (ORB) strategy is executed, subsequently a liquidity sweep strategy targets larger moves later into the trading session.
+<br><br> Trades are executed via the Alpaca API, where papertrading funds are available (simulated money).
 
+## General
 Program requires Python 3.10+
 Program requires accounts and/or API keys from the following external services:
   * Alpaca
@@ -9,7 +13,7 @@ Program requires accounts and/or API keys from the following external services:
 
 Certain file paths are hardcoded -- need to be replaced manually: bot_swing_commodities.py and enrich_trade_journal.py
 
-
+## Setup & Running the Program
 To run the program:
 
 (1) Insert API keys for Alpaca, Gemini and Currents, as well as Telegram bot token and chat ID into the empty quotes in config/settings.py.
