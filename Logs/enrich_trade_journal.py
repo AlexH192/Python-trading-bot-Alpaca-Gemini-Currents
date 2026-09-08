@@ -1,7 +1,7 @@
 """
 Enriches trade journal JSON based on market info at timestamp
 Usage:
-    python3 '/Users/alex/Desktop/stock api python/New/BOT/Logs/enrich_trade_journal.py' --reconciled '/Users/alex/Desktop/stock api python/New/BOT/Logs/reconciled_trades.json' --out enriched_trades.json
+    python3 '[path to enrich_trade_journal.py]' --reconciled '[path to reconciled_trades.json]' --out enriched_trades.json
 """
 
 import argparse
