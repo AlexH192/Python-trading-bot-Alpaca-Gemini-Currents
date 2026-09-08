@@ -59,7 +59,6 @@ for cfg in COMMODITY_MATRIX.values():
     ALL_SWING_TICKERS.extend([cfg["long_target"], cfg["short_target"]])
 
 
-POSITION_STATE_PATH = "/Users/alex/Desktop/stock api python/New/BOT/Logs/swing_positions.json"
 position_state_lock = asyncio.Lock()
 
 data_client = StockHistoricalDataClient(ALPACA_API_KEY, ALPACA_SECRET_KEY)
