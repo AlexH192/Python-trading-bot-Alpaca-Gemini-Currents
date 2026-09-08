@@ -1,22 +1,31 @@
 import os
+from dotenv import load_dotenv
+from pathlib import Path
 
 # =====================================================================
 # CONFIGURATION & SECURITY
 # =====================================================================
 
-ALPACA_API_KEY = ""
-ALPACA_SECRET_KEY = ""
-GEMINI_API_KEY = ""
+#Load API keys from .env file.
+load_dotenv()
+
+#Define base directory for relative file paths.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+ALPACA_API_KEY = os.getenv("ALPACA_API_KEY")
+ALPACA_SECRET_KEY = os.getenv("ALPACA_SECRET_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # TELEGRAM CREDENTIALS
-TELEGRAM_TOKEN = ""
-TELEGRAM_CHAT_ID = ""
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_IDI")
 
 # CURRENTS API CREDENTIALS
-CURRENTS_API_KEY = ""
+CURRENTS_API_KEY = os.getenv("CURRENTS_API_KEY")
 
 # LOGGING
-LOG_FILE_PATH = "" #Where trade log JSON file is located. If no file, program will create by itself.
+LOG_FILE_PATH = BASE_DIR / "Logs" / "trade_journal.json" #Where trade log JSON file is located. If no file, program will create by itself.
 
 
 #Risk management variables
