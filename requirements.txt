@@ -3,3 +3,4 @@ requests
 pandas
 numpy
 pandas-ta
+apscheduler
