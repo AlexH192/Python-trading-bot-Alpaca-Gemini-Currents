@@ -1,9 +1,11 @@
-alpaca-trade-api
+alpaca-py
 requests
 pandas
 numpy
-pandas-ta
+pandas-ta-classic
 apscheduler
 pydantic
 google-genai
 httpx
+python-dotenv
+yfinance
