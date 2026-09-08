@@ -4,3 +4,6 @@ pandas
 numpy
 pandas-ta
 apscheduler
+pydantic
+google-genai
+httpx
