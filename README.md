@@ -11,8 +11,6 @@ Program requires accounts and/or API keys from the following external services:
   * Currents news API
   * Telegram - bot token and chat ID
 
-Certain file paths are hardcoded -- need to be replaced manually: bot_swing_commodities.py and enrich_trade_journal.py
-
 ## Setup & Running the Program
 To run the program:
 
