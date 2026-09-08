@@ -27,6 +27,8 @@ CURRENTS_API_KEY = os.getenv("CURRENTS_API_KEY")
 # LOGGING
 LOG_FILE_PATH = BASE_DIR / "Logs" / "trade_journal.json" #Where trade log JSON file is located. If no file, program will create by itself.
 
+# OTHER FILEPATHS
+POSITION_STATE_PATH = BASE_DIR / "Logs" / "swing_positions.json"
 
 #Risk management variables
 RISK_DOLLARS_PER_TRADE = 200.0      # $ risked per trade, sized off (entry - stop) distance
