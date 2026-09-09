@@ -8,4 +8,4 @@ pydantic
 google-genai
 httpx
 python-dotenv
-yfinance
+tzdata
