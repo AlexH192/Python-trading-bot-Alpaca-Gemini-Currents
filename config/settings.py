@@ -22,8 +22,8 @@ TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 #REDIS
-REDIS_HOST = os.getenv("REDIS_HOST", "redis")
-REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
+host = os.getenv("REDIS_HOST", "redis")
+port = int(os.getenv("REDIS_PORT", 6379))
 
 r = redis.Redis(host=host, port=port)
 
