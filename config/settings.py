@@ -25,6 +25,8 @@ TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 REDIS_HOST = os.getenv("REDIS_HOST", "redis")
 REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
 
+r = redis.Redis(host=host, port=port)
+
 # CURRENTS API CREDENTIALS
 CURRENTS_API_KEY = os.getenv("CURRENTS_API_KEY")
 
