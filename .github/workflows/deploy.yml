@@ -1,0 +1,71 @@
+name: Build and Deploy Trading Bot
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+      - '.env_example'
+      - '.gitignore'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            alex2938e2/trading-bot:latest
+            alex2938e2/trading-bot:${{ github.sha }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Deploy or queue update
+        run: |
+          mkdir -p ~/.kube
+          ssh -o StrictHostKeyChecking=no admin@k3s-master \
+            "cat ~/.kube/config" > ~/.kube/config
+          sed -i 's/127.0.0.1/k3s-master/g' ~/.kube/config
+
+          if kubectl get nodes --request-timeout=10s > /dev/null 2>&1; then
+            echo "Cluster is online, deploying now..."
+            kubectl rollout restart deployment equities-bot -n trading
+            kubectl rollout restart deployment commodities-bot -n trading
+            kubectl rollout status deployment equities-bot -n trading --timeout=120s
+            kubectl rollout status deployment commodities-bot -n trading --timeout=120s
+            echo "Deployment complete"
+          else
+            echo "Cluster is asleep, queuing update..."
+            ssh -o StrictHostKeyChecking=no admin@k3s-master \
+              "echo 'PENDING_UPDATE=true' > ~/k3s-cluster/k3s/scripts/pending-update"
+            echo "Update queued for next wake"
+          fi
