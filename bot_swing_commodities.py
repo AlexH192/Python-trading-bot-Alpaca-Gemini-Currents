@@ -32,7 +32,7 @@ from alpaca.trading.stream import TradingStream
 from config.settings import ALPACA_API_KEY, ALPACA_SECRET_KEY, GEMINI_API_KEY, COMMODITY_MATRIX
 from utils.telegram_notifier import TelegramNotifier
 from utils.trade_logger import log_trade_to_journal
-from settings import POSITION_STATE_PATH
+from config.settings import POSITION_STATE_PATH
 
 # =====================================================================
 # CONFIGURATION
