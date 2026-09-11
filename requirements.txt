@@ -10,3 +10,4 @@ httpx
 python-dotenv
 tzdata
 redis
+yfinance
