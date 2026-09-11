@@ -9,4 +9,4 @@ google-genai
 httpx
 python-dotenv
 tzdata
-redis-py
+redis
