@@ -5,20 +5,18 @@ This is a Git repo for an algorithmic trading bot tracking (1) stock futures and
 <br><br> Trades are executed via the Alpaca API. Alpaca is a platform where paper-trading (trading with simulated money) is available. Trading with real money is also possible, however testing is done strictly with simulated money.
 <br><br>Some configurations have been made to this repo in order to make it compatible with the Kubernetes cluster it will run on. The cluster's GitHub repo is linked <a href="https://github.com/AlexH192/k3s-cluster.git">here.</a>
 ## General
-Program requires Python 3.10+
-Program requires accounts and/or API keys from the following external services:
+Program requires Python 3.10+, as well as accounts and/or API keys from the following external services:
   * Alpaca
   * Google Gemini
-  * Currents news API
+  * Currents News API
   * Telegram - bot token and chat ID
 
 ## Setup & Running the Program
-To run the program:
+To run the program locally:
 
 (1) Insert all needed API keys or credentials (Alpaca, Gemini, Currents, Telegram, Redis) into the .env file, as per the template `.env_example`.
 <br>(2) Install dependencies as listed in `requirements.txt`:
   ```
-pip install
 alpaca-py
 requests
 pandas
@@ -30,7 +28,8 @@ google-genai
 httpx
 python-dotenv
 tzdata
-redis-py
+redis
+yfinance
 ```
 <br>(3) Run command in terminal/command prompt/console:
 
@@ -50,3 +49,4 @@ To enrich trade journal based on historical market data pulled separately, run:
 ```
 python3 'FILEPATH/Logs/enrich_trade_journal.py' --reconciled 'FILEPATH/Logs/reconciled_trades.json' --out enriched_trades.json
 ```
+This data may be fed back into Gemini in order to inform decisions based on past trade outcomes in future versions.
