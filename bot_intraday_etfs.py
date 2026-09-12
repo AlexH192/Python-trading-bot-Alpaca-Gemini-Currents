@@ -458,7 +458,7 @@ async def run_trading_cycle():
                             except Exception as cancel_err:
                                 # Order may have already filled/canceled between the list call and
                                 # this cancel call -- not fatal, just log and continue.
-                                print(f"  ⚠️ Could not cancel order {order.id} for {ticker} (may already be resolved): {cancel_err}")
+                                print(f"Could not cancel order {order.id} for {ticker} (may already be resolved): {cancel_err}")
 
                         # 2. VERIFY cancellation actually completed, rather than guessing with a
                         # fixed sleep. cancel_order_by_id returns once Alpaca ACCEPTS the cancel
