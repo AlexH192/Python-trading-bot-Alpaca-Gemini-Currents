@@ -3,7 +3,7 @@ This is a Git repo for an algorithmic trading bot tracking (1) stock futures and
 <br><br> The equities (stock futures) trading strategy is twofold: at market open, an Opening Range Breakout (ORB) strategy is executed, subsequently a liquidity sweep strategy targets larger moves later into the trading session.
 <br><br> The commodities (commodity futures) trading strategy is a mean-reversion swing-trading strategy relying on longer timeframes and holding positions for multiple days.
 <br><br> Trades are executed via the Alpaca API. Alpaca is a platform where paper-trading (trading with simulated money) is available. Trading with real money is also possible, however testing is done strictly with simulated money.
-
+<br><br>Some configurations have been made to this repo in order to make it compatible with the Kubernetes cluster it will run on. The cluster's GitHub repo is linked <a href="https://github.com/AlexH192/k3s-cluster.git">here.</a>
 ## General
 Program requires Python 3.10+
 Program requires accounts and/or API keys from the following external services:
