@@ -1,4 +1,4 @@
-# Python-trading-bot--Alpaca-Gemini-Currents-APIs
+# Python-trading-bot-Alpaca-Gemini-Currents-APIs
 This is a Git repo for an algorithmic trading bot tracking (1) stock futures and (2) commodity futures, executing trades on their respective ETFs (e.g. QQQ, SPY, SOXX), running locally on Python and pulling data, executing trades and sending notifications via external API services.
 <br><br> The equities (stock futures) trading strategy is twofold: at market open, an Opening Range Breakout (ORB) strategy is executed, subsequently a liquidity sweep strategy targets larger moves later into the trading session.
 <br><br> The commodities (commodity futures) trading strategy is a mean-reversion swing-trading strategy relying on longer timeframes and holding positions for multiple days.
