@@ -444,33 +444,69 @@ async def run_trading_cycle():
                     ticker = position.symbol
                     try:
                         print(f"Closing position and cancelling open bracket orders for {ticker}...")
-                        
-                        # 1. Fetch open bracket orders for this specific ticker
+
+                        # 1. Cancel all open orders for this ticker (TP + SL legs)
                         order_filter = GetOrdersRequest(
                             status=QueryOrderStatus.OPEN,
                             symbols=[ticker]
                         )
                         open_orders = await asyncio.to_thread(trade_client.get_orders, filter=order_filter)
-                        
-                        # 2. Cancel the open orders via their Order IDs
+
                         for order in open_orders:
-                            await asyncio.to_thread(trade_client.cancel_order_by_id, order_id=order.id)
-                            
-                        # 3. Prevent API Race Condition
-                        # A brief pause prevents a known race condition where Alpaca's backend 
-                        # might still momentarily register the shares as "held" by the canceled orders.
-                        await asyncio.sleep(1)
-                            
-                        # 4. Create a valid ClosePositionRequest for 100% of the position
+                            try:
+                                await asyncio.to_thread(trade_client.cancel_order_by_id, order_id=order.id)
+                            except Exception as cancel_err:
+                                # Order may have already filled/canceled between the list call and
+                                # this cancel call -- not fatal, just log and continue.
+                                print(f"  ⚠️ Could not cancel order {order.id} for {ticker} (may already be resolved): {cancel_err}")
+
+                        # 2. VERIFY cancellation actually completed, rather than guessing with a
+                        # fixed sleep. cancel_order_by_id returns once Alpaca ACCEPTS the cancel
+                        # request, not once it's actually processed -- the order sits in
+                        # 'pending_cancel' briefly, during which the shares are still held.
+                        max_wait_attempts = 8
+                        for attempt in range(max_wait_attempts):
+                            remaining_orders = await asyncio.to_thread(trade_client.get_orders, filter=order_filter)
+                            if not remaining_orders:
+                                break
+                            print(f"  Waiting for {len(remaining_orders)} order(s) on {ticker} to finish cancelling "
+                                f"(attempt {attempt + 1}/{max_wait_attempts})...")
+                            await asyncio.sleep(0.5)
+                        else:
+                            print(f"  ⚠️ {ticker}: orders still showing open after {max_wait_attempts} checks -- "
+                                f"proceeding to close anyway, may fail.")
+
+                        # 3. Double-check the position itself reports shares as available,
+                        # not just that the order list is empty -- belt-and-suspenders against
+                        # any lag between an order clearing and Alpaca releasing the hold.
+                        for attempt in range(max_wait_attempts):
+                            try:
+                                current_position = await asyncio.to_thread(trade_client.get_open_position, ticker)
+                            except Exception:
+                                # Position may already be flat/closed by the time we check --
+                                # nothing left to liquidate.
+                                current_position = None
+                                break
+                            qty_available = float(getattr(current_position, 'qty_available', 0) or 0)
+                            if qty_available > 0:
+                                break
+                            print(f"  Waiting for {ticker} shares to be released from hold "
+                                f"(attempt {attempt + 1}/{max_wait_attempts})...")
+                            await asyncio.sleep(0.5)
+
+                        if current_position is None:
+                            print(f"  {ticker} already flat -- nothing to liquidate.")
+                            continue
+
+                        # 4. Now submit the close
                         close_request = ClosePositionRequest(percentage="100")
-                        
-                        # 5. Submit position closure
                         await asyncio.to_thread(
-                            trade_client.close_position, 
+                            trade_client.close_position,
                             symbol_or_asset_id=ticker,
                             close_options=close_request,
                         )
-                        
+                        print(f"  {ticker} liquidation submitted.")
+
                     except Exception as e:
                         print(f"Error liquidating {ticker}: {e}")
                         await TelegramNotifier.send(f"⚠️ Liquidation error for {ticker}: {e}")
