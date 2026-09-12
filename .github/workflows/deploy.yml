@@ -69,3 +69,16 @@ jobs:
               "echo 'PENDING_UPDATE=true' > ~/k3s-cluster/k3s/scripts/pending-update"
             echo "Update queued for next wake"
           fi
+    - name: Send Telegram Notification
+      if: always() # Runs on both success and failure
+      run: |
+        if [ "${{ job.status }}" = "success" ]; then
+          TEXT="*CI/CD Build Succeeded*%0A*Repo:* ${{ github.repository }}%0A*Branch:* \`${{ github.ref_name }}\`%0A*Actor:* ${{ github.actor }}"
+        else
+          TEXT="*CI/CD Build Failed*%0A*Repo:* ${{ github.repository }}%0A*Branch:* \`${{ github.ref_name }}\`%0A*Actor:* ${{ github.actor }}"
+        fi
+
+        curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+          -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+          -d "parse_mode=Markdown" \
+          -d "text=$TEXT"
